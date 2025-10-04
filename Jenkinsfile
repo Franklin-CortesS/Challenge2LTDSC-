@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     IMAGE_NAME = "demo-micro"
-    DOCKERHUB_NAMESPACE = "tuusuario"         
+    DOCKERHUB_NAMESPACE = "franklincs24"         
     REGISTRY = "docker.io"
     JAVA_HOME = tool name: 'JDK17', type: 'hudson.model.JDK'
     MAVEN_HOME = tool name: 'M3', type: 'hudson.tasks.Maven$MavenInstallation'
