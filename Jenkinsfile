@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    IMAGE_NAME = "demo-micro"
+    IMAGE_NAME = "demo-micro2"
     DOCKERHUB_NAMESPACE = "franklincs24"         
     REGISTRY = "docker.io"
     JAVA_HOME = tool name: 'JDK17', type: 'hudson.model.JDK'
