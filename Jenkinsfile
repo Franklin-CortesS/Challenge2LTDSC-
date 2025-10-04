@@ -33,25 +33,25 @@ pipeline {
         }
       }
     }
-  }
 
-  stage('Build & Push Image') {
-      steps {
-          script {
-              def tag = env.BUILD_NUMBER
-              withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',usernameVariable: 'DOCKER_USER',passwordVariable: 'DOCKER_PASS')]) {
-                bat """
-                docker login -u %DOCKER_USER% -p %DOCKER_PASS%
-                docker build -t ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} .
-                docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag}
-                docker tag ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
-                docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
-                """
-              }
-          }
-      }
+    stage('Build & Push Image') {
+        steps {
+            script {
+                def tag = env.BUILD_NUMBER
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',usernameVariable: 'DOCKER_USER',passwordVariable: 'DOCKER_PASS')]) {
+                  bat """
+                  docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                  docker build -t ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} .
+                  docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag}
+                  docker tag ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
+                  docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
+                  """
+                }
+            }
+        }
+    }
   }
-
+  
   post {
     success {
       echo "Imagen publicada: ${env.REGISTRY}/${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${env.BUILD_NUMBER}"
