@@ -34,18 +34,23 @@ pipeline {
       }
     }
 
-    stage('Build & Push Image') {
+  stage('Build & Push Image') {
       steps {
-        script {
-          def tag = env.BUILD_NUMBER
-          def image = docker.build("${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag}")
-          docker.withRegistry("https://${REGISTRY}", 'dockerhub-creds') {
-            image.push()
-            image.push('latest')
+          script {
+              def tag = env.BUILD_NUMBER
+              withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', 
+                                                usernameVariable: 'DOCKER_USER', 
+                                                passwordVariable: 'DOCKER_PASS')]) {
+                  bat """
+                  docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                  docker build -t ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} .
+                  docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag}
+                  docker tag ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
+                  docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
+                  """
+              }
           }
-        }
       }
-    }
   }
 
   post {
