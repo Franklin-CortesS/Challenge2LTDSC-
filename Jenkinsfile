@@ -38,16 +38,14 @@ pipeline {
       steps {
           script {
               def tag = env.BUILD_NUMBER
-              withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', 
-                                                usernameVariable: 'DOCKER_USER', 
-                                                passwordVariable: 'DOCKER_PASS')]) {
-                  bat """
-                  docker login -u %DOCKER_USER% -p %DOCKER_PASS%
-                  docker build -t ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} .
-                  docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag}
-                  docker tag ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
-                  docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
-                  """
+              withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',usernameVariable: 'DOCKER_USER',passwordVariable: 'DOCKER_PASS')]) {
+                bat """
+                docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                docker build -t ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} .
+                docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag}
+                docker tag ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${tag} ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
+                docker push ${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:latest
+                """
               }
           }
       }
